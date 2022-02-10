@@ -1,0 +1,80 @@
+	Etapa I - Proiect PA 2021
+	Stingescu Andrei Petrut 324CC
+	Dranca Stefana Ioana 324CC
+	
+	Compilare:
+	Programul se compileaza, cu ajutorul comenzii make build.
+	Pentru compilare, rulare, deschidere si conectare cu XBoard 
+	folosim comanda:
+		xboard -fcp "make run" -debug
+		
+	Structura proiectului:
+	Programul contine clasa de baza Main, care interpreteaza comenzile 
+	si apeleaza metodele din celelalte clase, astfel incat sa 
+	functioneze programul.
+	
+	ChessTable - clasa care reprezinta tabla de joc, retine listele de
+	piese pe culori si contine metode care inregistreaza mutarile 
+	fiecarui jucator 
+	
+	Piece - clasa abstracta care rerezinta orice piesa din tabla de sah
+	Pawn - clasa care reprezinta orice pion si prelucreaza cele 3 
+	tipuri de mutari (verificand ca sunt valide):
+	- Daca se afla la prima mutare poate inainta cu 2 casute in fata
+	- Mutarea simpla de o casuta  in fata
+	(pentru aceste 2 mutari verificam daca casuta destinatie este 
+	libera)
+	- Daca pe o casuta, de pe diagonala din fata se afla o piesa
+	adversara, pionul inainteaza pe acea pozitie si o elimina
+	
+	Clasele: Bishop, King, Knight, Queen, Rock si King mostenesc clasa
+	abstracta Piece. Metodele acestora vor fi dezvoltate in urmatoarele
+	etape ale proiectului.
+	
+	Detalii abordare algoritmica:
+	- in Main, retinem mereu culoarea ultimei piese mutate si 
+	pionul cu care vrem sa jucam. Dupa ce inregistram o mutare 
+	a adversarului (cand nu suntem in force) sau atunci cand primim
+	"go", verificam daca avem un pion salvat si daca acesta
+	nu a fost eliminat de adversar sau daca ne alegem primul
+	pion din lista noastra de piese (alegerea = O(n)).
+	- am retinut tabla de sah cu ajutorul unei matrici de obiecte
+	de clasa Piece. Acolo unde nu se afla nicio piesa avem null.
+	- Piesele sunt adaugate la "new" din tabla, in 2 ArrayList-uri
+	care retin piesele de cele 2 culori aflate inca in joc. Ne folosim
+	de urmatoarele metode ale ArrayList:
+		- get: O(1)
+		- remove: O(n)
+		- add: O(1)
+		- contains: O(n)
+	- In cazul tablei de sah n <= 16 mereu, deci O(n) devine O(1)
+	in complexitatile de mai sus
+
+	
+	Sursa de inspiratie: documentatie Xboard
+	
+	Responsabilitati:
+	- Stefana-Ioana Dranca: a implementat Piece, Pawn si clasele
+	celorlalte piese, debug, a contribuit la Main si ChessTable  
+	- Andrei Petrut Stingescu: a implementat Main si ChessTable, debug,
+	a contribuit la Pawn si Piece
+
+
+	Etapa II
+
+	Structura proiectului:
+	Tabla de sah este structurata astfel incat fiecare piesa a fost reprezentata pe baza unei clase. Fiecare
+	clasa contine o metoda care returneaza un ArrayList cu toate mutarile posibile ale piesei respective.
+	Dupa fiecare mutare a adversarului verificam daca ne aflam in sah, complexitatea algortimului fiind de O(1).
+	Daca ne aflam in sah, apelam functia getNotCheck care ne returneaza o mutare valida care ne scoate din sah.
+	Mai intai verifica toate mutarile regelui, iar daca nu exista nici una posibila care sa il apere, se apeleza
+	restul pieselor care il pot salva. In implementarea acestei functii am creat copii ale tablei de sah cu fiecare
+	mutare posibila pentru a testa daca ne poate scoate din sah.(O(k) - k finit => O(1))
+	Pentru cazul in care un pion ajunge la marginea opusa a tablei, atunci se va apela functia pawnTransform care
+	actulizeaza pionul cu piesa dorita de jucator. Pentru cazul botului acesta de fiecare data va schimba pionul
+	cu bishop(in cazul in care se vrea schimbarea piesei, la clasa Pawn in metoda moveUpdates, linia 19 se modifica cu
+	ce se doreste)
+
+    Responsabilitati:
+	- Stefana-Ioana Dranca: a implementat King, Queen, Bishop si metodele de salvare a regelui, getNotCheck
+	- Andrei Petrut Stingescu: a implementat Restul pieselor, getKing, getRandomMove, checkKingSah
